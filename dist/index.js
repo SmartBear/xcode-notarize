@@ -12954,7 +12954,7 @@ const archive = async ({productPath}) => {
     ];
 
     try {
-        await execa("ditto", args);
+        await execa.execa("ditto", args);
     } catch (error) {
         core.error(error);
         return null;
@@ -13013,7 +13013,7 @@ const submit = async ({productPath, archivePath, primaryBundleId, username, pass
         args.push("--verbose");
     }
 
-    let xcrun = execa("xcrun", args, {reject: false});
+    let xcrun = execa.execa("xcrun", args, {reject: false});
 
     if (verbose === true) {
         xcrun.stdout.pipe(process.stdout);
@@ -13066,7 +13066,7 @@ const wait = async ({uuid, username, password, verbose, retries}) => {
     }
 
     for (let i = 0; i < retries; i++) {
-        let xcrun = execa("xcrun", args, {reject: false});
+        let xcrun = execa.execa("xcrun", args, {reject: false});
 
         if (verbose === true) {
             xcrun.stdout.pipe(process.stdout);
