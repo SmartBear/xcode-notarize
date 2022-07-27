@@ -38,7 +38,7 @@ const parseConfiguration = () => {
         password: core.getInput("appstore-connect-password", {required: true}),
         primaryBundleId: core.getInput("primary-bundle-id"),
         verbose: core.getInput("verbose") === "true",
-        retries: parseInt(core.getInput("retries") || "10")
+        retries: parseInt(core.getInput("retries"))
     };
 
     if (!fs.existsSync(configuration.productPath)) {

@@ -51,12 +51,17 @@ inputs:
   verbose:
     description: "Verbose mode will print Notarization API responses."
     required: false
-    default: false
+    default: 'false'
+
+  retries:
+    description: "Number of retries every 30 sec. Defaults to 10."
+    required: false
+    default: '10'
 
 outputs:
   product-path:
     description: "Path to the product that was notarized"
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
