@@ -13103,16 +13103,16 @@ const wait = async ({uuid, username, password, verbose, retries}) => {
         const notarizationInfo = response["notarization-info"];
         switch (notarizationInfo["Status"]) {
             case "in progress":
-                core.info(`Notarization status <in progress>`);
+                core.info(`#${i} Notarization status <in progress>`);
                 break;
             case "invalid":
-                core.error(`Notarization status <invalid> - ${notarizationInfo["Status Message"]}`);
+                core.error(`#${i} Notarization status <invalid> - ${notarizationInfo["Status Message"]}`);
                 return false;
             case "success":
-                core.info(`Notarization status <success>`);
+                core.info(`#${i} Notarization status <success>`);
                 return true;
             default:
-                core.error(`Notarization status <${notarizationInfo["Status"]}> - TODO`);
+                core.error(`#${i} Notarization status <${notarizationInfo["Status"]}> - TODO`);
                 return false;
         }
 
