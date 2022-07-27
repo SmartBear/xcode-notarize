@@ -38,6 +38,7 @@ const parseConfiguration = () => {
         password: core.getInput("appstore-connect-password", {required: true}),
         primaryBundleId: core.getInput("primary-bundle-id"),
         verbose: core.getInput("verbose") === "true",
+        retries: parseInt(core.getInput("retries") || "10")
     };
 
     if (!fs.existsSync(configuration.productPath)) {
@@ -121,7 +122,7 @@ const submit = async ({productPath, archivePath, primaryBundleId, username, pass
 
     let xcrun = execa("xcrun", args, {reject: false});
 
-    if (verbose == true) {
+    if (verbose === true) {
         xcrun.stdout.pipe(process.stdout);
         xcrun.stderr.pipe(process.stderr);
     }
@@ -140,6 +141,8 @@ const submit = async ({productPath, archivePath, primaryBundleId, username, pass
             console.log(response);
         }
 
+        console.error(stderr);
+
         for (const productError of response["product-errors"]) {
             core.error(`${productError.code} - ${productError.message}`);
         }
@@ -155,7 +158,7 @@ const submit = async ({productPath, archivePath, primaryBundleId, username, pass
 };
 
 
-const wait = async ({uuid, username, password, verbose}) => {
+const wait = async ({uuid, username, password, verbose, retries}) => {
     const args = [
         "altool",
         "--output-format", "json",
@@ -169,10 +172,10 @@ const wait = async ({uuid, username, password, verbose}) => {
         args.push("--verbose");
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < retries; i++) {
         let xcrun = execa("xcrun", args, {reject: false});
 
-        if (verbose == true) {
+        if (verbose === true) {
             xcrun.stdout.pipe(process.stdout);
             xcrun.stderr.pipe(process.stderr);
         }
@@ -190,6 +193,8 @@ const wait = async ({uuid, username, password, verbose}) => {
             if (verbose === true) {
                 console.log(response);
             }
+
+            console.error(stderr);
 
             for (const productError of response["product-errors"]) {
                 core.error(`${productError.code} - ${productError.message}`);
@@ -262,7 +267,7 @@ const main = async () => {
             return await wait({uuid: uuid, archivePath: archivePath, ...configuration})
         });
 
-        if (success == false) {
+        if (success === false) {
             core.setFailed("Notarization failed");
             return;
         }
